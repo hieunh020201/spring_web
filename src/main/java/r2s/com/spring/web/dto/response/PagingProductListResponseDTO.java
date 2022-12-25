@@ -8,10 +8,17 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.List;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderListResponseDTO implements Serializable {
-    private List<OrderResponseDTO> responseDTOList;
+public class PagingProductListResponseDTO implements Serializable {
+
+    private List<ProductResponseDTO> productList;
+
+    private Integer size;
+
+    private Integer page;
+
+    private String sort;
 }

@@ -7,18 +7,22 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateProductRequestDTO implements Serializable {
+public class UpdateAddressRequestDTO implements Serializable {
     private String name;
 
-    private int categoryId;
+    private String phone;
 
-    private int price;
+    private String province;
 
-    private int userId;
+    private String district;
 
-    private int inventoryNumber;
+    private String street;
+
+    private boolean type;
+
+    private boolean defaultAddress;
 }

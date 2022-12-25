@@ -6,20 +6,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateUserResponseDTO implements Serializable {
-    private int id;
+public class PagingCartDetailListResponseDTO implements Serializable {
 
-    private String name;
+    private List<CartDetailResponseDTO> cartDetailList;
 
-    private String email;
+    private Integer size;
 
-    private String phone;
+    private Integer page;
 
-    private Date birthday;
+    private String sort;
 }

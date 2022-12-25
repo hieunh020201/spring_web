@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRequestDTO implements Serializable {
+public class CreateOrderRequestDTO implements Serializable {
     private int cartId;
 
     private int totalCost;

@@ -14,6 +14,8 @@ import java.sql.Date;
 @NoArgsConstructor
 public class UserResponseDTO implements Serializable {
 
+    private int id;
+
     private String username;
 
     private String name;

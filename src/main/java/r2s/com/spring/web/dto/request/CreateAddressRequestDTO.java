@@ -6,22 +6,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateUserRequestDTO implements Serializable {
+public class CreateAddressRequestDTO implements Serializable {
     private String name;
-
-    private String username;
 
     private String phone;
 
-    private String gender;
+    private String province;
 
-    private String email;
+    private String district;
 
-    private Date birthday;
+    private String street;
+
+    private boolean type;
+
+    private boolean defaultAddress;
+
+    private int userId;
 }

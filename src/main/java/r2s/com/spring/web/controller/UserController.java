@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import r2s.com.spring.web.dto.request.CreateUserRequestDTO;
 import r2s.com.spring.web.dto.request.UpdateUserRequestDTO;
 import r2s.com.spring.web.dto.response.PagingUserListResponseDTO;
-import r2s.com.spring.web.dto.response.UpdateUserResponseDTO;
 import r2s.com.spring.web.dto.response.UserResponseDTO;
 
 import java.sql.Date;
@@ -23,6 +22,7 @@ public class UserController {
                                      @RequestParam(value = "size", required = false) Integer size,
                                      @RequestParam(value = "sort", required = false) String type_sort) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setId(1);
         userResponseDTO.setUsername("hieu01");
         userResponseDTO.setName("Nguyen Huu Hieu");
         userResponseDTO.setEmail("hieu01@gmail.com");
@@ -32,6 +32,7 @@ public class UserController {
         userResponseDTO.setRole("USER");
 
         UserResponseDTO userResponseDTO1 = new UserResponseDTO();
+        userResponseDTO1.setId(2);
         userResponseDTO1.setUsername("hieu02");
         userResponseDTO1.setName("Huu Hieu");
         userResponseDTO1.setEmail("hieu02@gmail.com");
@@ -63,6 +64,7 @@ public class UserController {
         Date birthday = createUserRequestDto.getBirthday();
 
         UserResponseDTO response = new UserResponseDTO();
+        response.setId(1);
         response.setUsername(username);
         response.setName(name);
         response.setPhone(phone);
@@ -73,9 +75,10 @@ public class UserController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity getUserById(@PathVariable int userId) {
+    @GetMapping("/{user-id}")
+    public ResponseEntity getDetailUserByUserId(@PathVariable(value = "user-id") int userId) {
         UserResponseDTO response = new UserResponseDTO();
+        response.setId(userId);
         response.setUsername("hieu01");
         response.setName("Nguyen Huu Hieu");
         response.setEmail("hieu01@gmail.com");
@@ -89,12 +92,15 @@ public class UserController {
     @PutMapping("/{user-id}")
     public ResponseEntity updateUser(@PathVariable(value = "user-id") int userId,
                                      @RequestBody UpdateUserRequestDTO updateUserRequestDTO) {
-        UpdateUserResponseDTO response = new UpdateUserResponseDTO();
+        UserResponseDTO response = new UserResponseDTO();
         response.setId(userId);
+        response.setUsername(updateUserRequestDTO.getUsername());
         response.setName(updateUserRequestDTO.getName());
         response.setEmail(updateUserRequestDTO.getEmail());
         response.setPhone(updateUserRequestDTO.getPhone());
+        response.setGender(updateUserRequestDTO.getGender());
         response.setBirthday(updateUserRequestDTO.getBirthday());
+        response.setRole("USER");
 
         return new ResponseEntity(response, HttpStatus.OK);
     }

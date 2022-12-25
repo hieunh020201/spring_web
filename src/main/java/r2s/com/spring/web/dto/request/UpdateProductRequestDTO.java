@@ -11,14 +11,12 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateProductRequestDTO implements Serializable {
+public class UpdateProductRequestDTO implements Serializable {
     private String name;
 
     private int categoryId;
 
     private int price;
-
-    private int userId;
 
     private int inventoryNumber;
 }

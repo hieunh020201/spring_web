@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDetailResponseDTO implements Serializable {
-    private int id;
+    private int idCart;
 
     private int productId;
 

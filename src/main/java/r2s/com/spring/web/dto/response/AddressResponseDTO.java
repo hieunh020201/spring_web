@@ -1,4 +1,4 @@
-package r2s.com.spring.web.dto;
+package r2s.com.spring.web.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,9 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressDTO implements Serializable {
+public class AddressResponseDTO implements Serializable {
+    private int id;
+
     private String name;
 
     private String phone;

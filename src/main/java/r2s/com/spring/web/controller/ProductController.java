@@ -4,9 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import r2s.com.spring.web.dto.request.CreateProductRequestDTO;
-import r2s.com.spring.web.dto.response.CategoryResponseDTO;
-import r2s.com.spring.web.dto.response.ProductListResponseDTO;
-import r2s.com.spring.web.dto.response.ProductResponseDTO;
+import r2s.com.spring.web.dto.request.UpdateProductRequestDTO;
+import r2s.com.spring.web.dto.response.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +25,10 @@ public class ProductController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity getAllProduct() {
+    @GetMapping(value = "/get-all")
+    public ResponseEntity getAllProduct(@RequestParam(value = "page", required = false) Integer page,
+                                        @RequestParam(value = "size", required = false) Integer size,
+                                        @RequestParam(value = "sort", required = false) String type_sort) {
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
         productResponseDTO.setId(1);
         productResponseDTO.setName("Ao len");
@@ -48,9 +49,43 @@ public class ProductController {
         productList.add(productResponseDTO);
         productList.add(productResponseDTO1);
 
-        ProductListResponseDTO response = new ProductListResponseDTO();
-        response.setProductResponseDTOList(productList);
+        PagingProductListResponseDTO response = new PagingProductListResponseDTO();
+        response.setProductList(productList);
+        response.setSize(size);
+        response.setPage(page);
+        response.setSort(type_sort);
 
         return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{product-id}")
+    public ResponseEntity getDetailProductByProductId(@PathVariable(value = "product-id") int productId) {
+        ProductResponseDTO response = new ProductResponseDTO();
+        response.setId(productId);
+        response.setName("Ao thun");
+        response.setPrice(100000);
+        response.setCategoryId(1);
+        response.setUserId(1);
+        response.setInventoryNumber(10);
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{product-id}")
+    public ResponseEntity updateProduct(@PathVariable(value = "product-id") int productId,
+                                     @RequestBody UpdateProductRequestDTO updateProductRequestDTO) {
+        ProductResponseDTO response = new ProductResponseDTO();
+        response.setId(productId);
+        response.setName(updateProductRequestDTO.getName());
+        response.setPrice(updateProductRequestDTO.getPrice());
+        response.setCategoryId(updateProductRequestDTO.getCategoryId());
+        response.setUserId(1);
+        response.setInventoryNumber(updateProductRequestDTO.getInventoryNumber());
+
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{product-id}")
+    public ResponseEntity deleteProduct(@PathVariable(value = "product-id") int productId) {
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

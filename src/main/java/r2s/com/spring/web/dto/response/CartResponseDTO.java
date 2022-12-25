@@ -7,6 +7,7 @@ import lombok.Setter;
 import r2s.com.spring.web.dto.request.CartDetailRequestDTO;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 
 @Setter
@@ -18,5 +19,5 @@ public class CartResponseDTO implements Serializable {
 
     private int userId;
 
-    private List<CartDetailRequestDTO> cartDetailRequestDTOList;
+    private Date createdAt;
 }

@@ -13,10 +13,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PagingUserListResponseDTO implements Serializable {
+public class PagingAddressListResponseDTO implements Serializable {
 
     @JsonProperty(value = "data_list")
-    private List<UserResponseDTO> userResponseDTOList;
+    private List<AddressResponseDTO> addressList;
 
     private Integer size;
 

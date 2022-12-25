@@ -7,18 +7,12 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateProductRequestDTO implements Serializable {
-    private String name;
+public class UpdateOrderRequestDTO implements Serializable {
+    private int totalCost;
 
-    private int categoryId;
-
-    private int price;
-
-    private int userId;
-
-    private int inventoryNumber;
+    private String status;
 }
