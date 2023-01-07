@@ -1,14 +1,17 @@
 package com.r2s.springJPA.service;
 
-import com.r2s.springJPA.dto.CreateCartRequestDTO;
-import com.r2s.springJPA.entity.Cart;
+import com.r2s.springJPA.dto.request.CartRequestDTO;
+import com.r2s.springJPA.dto.response.CartResponseDto;
+import com.r2s.springJPA.dto.response.PageResponseDto;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-@Component
 public interface CartService {
-    public List<Cart> getAllCarts();
+    public PageResponseDto getAllCarts(Pageable pageable);
 
-    public Cart insertCart(CreateCartRequestDTO requestDTO);
+    public CartResponseDto insertCart(CartRequestDTO requestDTO);
+
+    public CartResponseDto getCartByCartId(int cartId);
+
+    public void deleteCartByCartId(int cartId);
 }

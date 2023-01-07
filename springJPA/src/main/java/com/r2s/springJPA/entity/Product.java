@@ -18,8 +18,9 @@ public class Product {
     @Column(name = "PRICE")
     private int price;
 
-    @Column(name = "CATEGORY_ID")
-    private int categoryId;
+    @ManyToOne
+    @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")
+    private Category category;
 
     @Column(name = "IS_DELETED")
     private boolean isDeleted;

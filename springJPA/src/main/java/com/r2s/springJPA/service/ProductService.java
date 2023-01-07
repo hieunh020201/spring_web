@@ -1,16 +1,24 @@
 package com.r2s.springJPA.service;
 
-import com.r2s.springJPA.dto.CreateProductRequestDTO;
+import com.r2s.springJPA.dto.request.CreateProductRequestDTO;
+import com.r2s.springJPA.dto.request.UpdateProductRequestDto;
+import com.r2s.springJPA.dto.response.PageResponseDto;
+import com.r2s.springJPA.dto.response.ProductResponseDto;
 import com.r2s.springJPA.entity.Product;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public interface ProductService {
 
-    public List<Product> getAllProducts();
+    public PageResponseDto getAllProducts(Pageable pageable);
 
-    public Product insertProduct(CreateProductRequestDTO requestDTO);
+    public ProductResponseDto insertProduct(CreateProductRequestDTO requestDTO);
+
+    public ProductResponseDto updateProduct(int productId, UpdateProductRequestDto requestDto);
+
+    public ProductResponseDto getProductByProductId(int productId);
+
+    public void deleteProduct(int productId);
 }

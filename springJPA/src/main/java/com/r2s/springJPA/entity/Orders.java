@@ -21,4 +21,7 @@ public class Orders {
 
     @Column(name = "STATUS")
     private String status;
+
+    @Column(name = "IS_DELETED")
+    private boolean isDeleted;
 }

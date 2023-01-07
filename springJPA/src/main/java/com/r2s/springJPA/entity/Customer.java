@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Data
-@Entity(name = "USERS")
-public class Users {
+@Entity(name = "CUSTOMER")
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +37,10 @@ public class Users {
 
     @Column(name = "ROLE")
     private String role;
+
+    @Column(name = "IS_DELETED")
+    private boolean isDeleted;
+
+    @OneToOne(mappedBy = "customer")
+    private Address address;
 }
