@@ -4,8 +4,10 @@ import com.r2s.springJPA.dto.request.CartRequestDTO;
 import com.r2s.springJPA.dto.response.CartResponseDto;
 import com.r2s.springJPA.dto.response.PageResponseDto;
 import com.r2s.springJPA.entity.Cart;
+import com.r2s.springJPA.entity.Customer;
 import com.r2s.springJPA.mapper.CartMapper;
 import com.r2s.springJPA.repository.CartRepository;
+import com.r2s.springJPA.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,9 @@ public class CartServiceImpl implements CartService{
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Autowired
     private CartMapper cartMapper;
@@ -38,19 +43,6 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
-    public CartResponseDto insertCart(CartRequestDTO requestDTO) {
-        try {
-            Cart cart = new Cart();
-            cart.setCustomerId(requestDTO.getCustomerId());
-            cart.setDeleted(false);
-            return cartMapper.convertEntityResponseDto(cartRepository.save(cart));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
     public CartResponseDto getCartByCartId(int cartId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("Cart doesn't exist"));
@@ -63,5 +55,15 @@ public class CartServiceImpl implements CartService{
                 .orElseThrow(() -> new IllegalArgumentException("Cart doesn't exist"));
         cart.setDeleted(true);
         cartMapper.convertEntityResponseDto(cartRepository.save(cart));
+    }
+
+    @Override
+    public CartResponseDto insertCartByCustomer(int customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid"));
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        cart.setDeleted(false);
+        return cartMapper.convertEntityResponseDto(cartRepository.save(cart));
     }
 }

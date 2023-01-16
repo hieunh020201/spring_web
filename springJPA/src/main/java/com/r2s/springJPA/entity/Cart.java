@@ -1,10 +1,13 @@
 package com.r2s.springJPA.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
+@Setter
+@Getter
 @Entity(name = "CART")
 public class Cart {
 
@@ -13,8 +16,9 @@ public class Cart {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "CUSTOMER_ID")
-    private int customerId;
+    @ManyToOne
+    @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+    private Customer customer;
 
     @Column(name = "IS_DELETED")
     private boolean isDeleted;

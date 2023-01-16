@@ -1,12 +1,8 @@
 package com.r2s.springJPA.controller;
 
-import com.r2s.springJPA.dto.request.CreateAddressByCustomerRequestDTO;
-import com.r2s.springJPA.dto.request.CreateCustomerRequestDTO;
-import com.r2s.springJPA.dto.request.UpdateAddressRequestDto;
-import com.r2s.springJPA.dto.request.UpdateCustomerRequestDto;
-import com.r2s.springJPA.dto.response.AddressResponseDto;
-import com.r2s.springJPA.dto.response.PageResponseDto;
-import com.r2s.springJPA.dto.response.CustomerResponseDto;
+import com.r2s.springJPA.dto.request.*;
+import com.r2s.springJPA.dto.response.*;
+import com.r2s.springJPA.entity.Address;
 import com.r2s.springJPA.service.AddressService;
 import com.r2s.springJPA.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/customer")
@@ -58,28 +56,24 @@ public class CustomerController {
 
     @PostMapping("/{customer-id}/address")
     public ResponseEntity<?> insertAddressByCustomer(@PathVariable("customer-id") int customerId, @RequestBody CreateAddressByCustomerRequestDTO requestDTO) {
-        AddressResponseDto addressResponseDto = addressService.insertAddressByCustomer(customerId, requestDTO);
+        CustomerAddressResponseDto addressResponseDto = addressService.insertAddressByCustomer(customerId, requestDTO);
         return new ResponseEntity<>(addressResponseDto, HttpStatus.OK);
     }
 
     @GetMapping("/{customer-id}/address")
-    public ResponseEntity<?> getAddressByCustomer(@PathVariable("customer-id") int customerId) {
-        CustomerResponseDto customerResponseDto = customerService.getCustomerById(customerId);
-        AddressResponseDto addressResponseDto = addressService.getAddressByCustomer(customerId);
-        customerResponseDto.setAddressResponseDto(addressResponseDto);
+    public ResponseEntity<?> getListAddressesByCustomer(@PathVariable("customer-id") int customerId) {
+        AddressByCustomerResponseDto customerResponseDto = addressService.getListAddressesByCustomer(customerId);
         return new ResponseEntity<>(customerResponseDto, HttpStatus.OK);
     }
 
-    @PutMapping("/{customer-id}/address")
-    public ResponseEntity<?> updateAddressByCustomer(@PathVariable("customer-id") int customerId, @RequestBody UpdateAddressRequestDto requestDTO) {
-        CustomerResponseDto customerResponseDto = customerService.getCustomerById(customerId);
-        AddressResponseDto addressResponseDto = addressService.updateAddressByCustomer(customerId, requestDTO);
-        customerResponseDto.setAddressResponseDto(addressResponseDto);
+    @PutMapping("/{customer-id}/address/{address-id}")
+    public ResponseEntity<?> updateAddressByCustomer(@PathVariable("customer-id") int customerId, @PathVariable("address-id") int addressId, @RequestBody UpdateAddressByCustomerRequestDto requestDTO) {
+        CustomerAddressResponseDto customerResponseDto = addressService.updateAddressByCustomer(customerId, addressId, requestDTO);
         return new ResponseEntity<>(customerResponseDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{customer-id}/address")
-    public ResponseEntity<?> deleteAddressByCustomer(@PathVariable("customer-id") int customerId) {
+    @DeleteMapping("/{customer-id}/address/{address-id}")
+    public ResponseEntity<?> deleteAddressByCustomer(@PathVariable("customer-id") int customerId, @PathVariable("address-id") int addressId) {
         addressService.deleteAddressByCustomer(customerId);
         StringBuilder response = new StringBuilder();
         response.append("Delete Address of Customer Id: ").append(customerId);

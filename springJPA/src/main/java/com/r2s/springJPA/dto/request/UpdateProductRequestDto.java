@@ -9,6 +9,4 @@ public class UpdateProductRequestDto implements Serializable {
     private String name;
 
     private int price;
-
-    private int categoryId;
 }

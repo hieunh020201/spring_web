@@ -2,11 +2,13 @@ package com.r2s.springJPA.service;
 
 import com.r2s.springJPA.dto.request.CreateAddressByCustomerRequestDTO;
 import com.r2s.springJPA.dto.request.CreateAddressRequestDto;
+import com.r2s.springJPA.dto.request.UpdateAddressByCustomerRequestDto;
 import com.r2s.springJPA.dto.request.UpdateAddressRequestDto;
-import com.r2s.springJPA.dto.response.AddressResponseDto;
-import com.r2s.springJPA.dto.response.PageResponseDto;
+import com.r2s.springJPA.dto.response.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 public interface AddressService {
     public PageResponseDto getAllAddresses(Pageable pageable);
@@ -19,11 +21,11 @@ public interface AddressService {
 
     public void deleteAddress(int addressId);
 
-    public AddressResponseDto insertAddressByCustomer(int customerId, CreateAddressByCustomerRequestDTO requestDTO);
+    public CustomerAddressResponseDto insertAddressByCustomer(int customerId, CreateAddressByCustomerRequestDTO requestDTO);
 
-    public AddressResponseDto getAddressByCustomer(int customerId);
+    public AddressByCustomerResponseDto getListAddressesByCustomer(int customerId);
 
-    public AddressResponseDto updateAddressByCustomer(int customerId, UpdateAddressRequestDto requestDto);
+    CustomerAddressResponseDto updateAddressByCustomer(int customerId, int addressId, UpdateAddressByCustomerRequestDto requestDto);
 
     public void deleteAddressByCustomer(int customerId);
 }

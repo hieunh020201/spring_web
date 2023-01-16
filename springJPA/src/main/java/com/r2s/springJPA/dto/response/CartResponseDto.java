@@ -6,5 +6,5 @@ import java.io.Serializable;
 
 @Data
 public class CartResponseDto implements Serializable {
-    private int customerId;
+    private int cartId;
 }

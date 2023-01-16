@@ -1,8 +1,7 @@
 package com.r2s.springJPA.service;
 
-import com.r2s.springJPA.dto.request.CreateProductRequestDTO;
+import com.r2s.springJPA.dto.request.ProductRequestDTO;
 import com.r2s.springJPA.dto.request.UpdateProductRequestDto;
-import com.r2s.springJPA.dto.response.CategoryResponseDto;
 import com.r2s.springJPA.dto.response.PageResponseDto;
 import com.r2s.springJPA.dto.response.ProductResponseDto;
 import com.r2s.springJPA.entity.Category;
@@ -46,30 +45,6 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    @Transactional
-    public ProductResponseDto insertProduct(CreateProductRequestDTO requestDTO) {
-        Product product = new Product();
-        product.setName(requestDTO.getName());
-        product.setPrice(requestDTO.getPrice());
-        product.setCategory(categoryRepository.findById(requestDTO.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("CategoryID is invalid")));
-        product.setDeleted(false);
-        return productMapper.convertEntityResponseDto(productRepository.save(product));
-    }
-
-    @Override
-    public ProductResponseDto updateProduct(int productId, UpdateProductRequestDto requestDto) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
-        product.setName(requestDto.getName());
-        product.setPrice(requestDto.getPrice());
-        product.setCategory(categoryRepository.findById(requestDto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("CategoryID is invalid")));
-
-        return productMapper.convertEntityResponseDto(productRepository.save(product));
-    }
-
-    @Override
     public ProductResponseDto getProductByProductId(int productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
@@ -80,6 +55,54 @@ public class ProductServiceImpl implements ProductService{
     public void deleteProduct(int productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
+        product.setDeleted(true);
+        productRepository.save(product);
+    }
+
+    @Override
+    public ProductResponseDto insertProductByCategory(int categoryId, ProductRequestDTO requestDTO) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("CategoryId is invalid"));
+
+        Product product = new Product();
+        product.setCategory(category);
+        product.setName(requestDTO.getName());
+        product.setPrice(requestDTO.getPrice());
+        product.setDeleted(false);
+
+        return productMapper.convertEntityResponseDto(productRepository.save(product));
+    }
+
+    @Override
+    public ProductResponseDto updateProductByCategory(int categoryId, int productId, ProductRequestDTO requestDTO) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("ProductId is invalid"));
+        if (product.getCategory().getId() != categoryId) {
+            throw new IllegalArgumentException("CategoryId is invalid");
+        }
+        product.setName(requestDTO.getName());
+        product.setPrice(requestDTO.getPrice());
+
+        return productMapper.convertEntityResponseDto(productRepository.save(product));
+    }
+
+    @Override
+    public ProductResponseDto getProductByCategory(int categoryId, int productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("ProductId is invalid"));
+        if (product.getCategory().getId() != categoryId) {
+            throw new IllegalArgumentException("CategoryId is invalid");
+        }
+        return productMapper.convertEntityResponseDto(product);
+    }
+
+    @Override
+    public void deleteProductByCategory(int categoryId, int productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("ProductId is invalid"));
+        if (product.getCategory().getId() != categoryId) {
+            throw new IllegalArgumentException("CategoryId is invalid");
+        }
         product.setDeleted(true);
         productRepository.save(product);
     }

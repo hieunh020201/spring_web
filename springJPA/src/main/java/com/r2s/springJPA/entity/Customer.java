@@ -1,12 +1,20 @@
 package com.r2s.springJPA.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
+import java.util.Set;
 
-@Data
-@Entity(name = "CUSTOMER")
+@Getter
+@Setter
+@Entity
+@Table(name = "CUSTOMER")
+@Where(clause = "IS_DELETED = false")
 public class Customer {
 
     @Id
@@ -41,6 +49,9 @@ public class Customer {
     @Column(name = "IS_DELETED")
     private boolean isDeleted;
 
-    @OneToOne(mappedBy = "customer")
-    private Address address;
+    @OneToMany(mappedBy = "customerAddressId.customer")
+    private List<CustomerAddress> customerAddresses;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Cart> carts;
 }
