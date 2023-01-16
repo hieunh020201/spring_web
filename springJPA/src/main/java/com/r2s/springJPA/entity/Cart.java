@@ -13,8 +13,8 @@ public class Cart {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "USER_ID")
-    private int userId;
+    @Column(name = "CUSTOMER_ID")
+    private int customerId;
 
     @Column(name = "IS_DELETED")
     private boolean isDeleted;

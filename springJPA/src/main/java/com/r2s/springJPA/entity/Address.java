@@ -37,6 +37,7 @@ public class Address {
     @Column(name = "IS_DELETED")
     private boolean isDeleted;
 
-    @Column(name = "USER_ID")
-    private int userId;
+    @OneToOne
+    @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+    private Customer customer;
 }

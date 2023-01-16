@@ -1,14 +1,19 @@
 package com.r2s.springJPA.service;
 
-import com.r2s.springJPA.dto.CreateCategoryRequestDTO;
-import com.r2s.springJPA.entity.Category;
+import com.r2s.springJPA.dto.request.CategoryRequestDTO;
+import com.r2s.springJPA.dto.response.CategoryResponseDto;
+import com.r2s.springJPA.dto.response.PageResponseDto;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-@Component
 public interface CategoryService {
-    public List<Category> getAllCategories();
+    public PageResponseDto getAllCategories(Pageable pageable);
 
-    public Category insertCategory(CreateCategoryRequestDTO requestDTO);
+    public CategoryResponseDto insertCategory(CategoryRequestDTO requestDTO);
+
+    public CategoryResponseDto updateCategory(int categoryId, CategoryRequestDTO requestDTO);
+
+    public CategoryResponseDto getCategoryById(int categoryId);
+
+    public void deleteCategoryById(int categoryId);
 }

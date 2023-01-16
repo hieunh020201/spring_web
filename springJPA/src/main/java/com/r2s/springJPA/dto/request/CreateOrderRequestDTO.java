@@ -1,4 +1,4 @@
-package com.r2s.springJPA.dto;
+package com.r2s.springJPA.dto.request;
 
 import lombok.Data;
 

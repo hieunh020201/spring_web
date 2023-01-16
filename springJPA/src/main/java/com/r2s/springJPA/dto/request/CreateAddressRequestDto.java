@@ -1,12 +1,11 @@
-package com.r2s.springJPA.dto;
+package com.r2s.springJPA.dto.request;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
 
 @Data
-public class CreateAddressRequestDTO implements Serializable {
+public class CreateAddressRequestDto implements Serializable {
     private String name;
 
     private String phone;
@@ -21,5 +20,5 @@ public class CreateAddressRequestDTO implements Serializable {
 
     private boolean defaultAddress;
 
-    private int userId;
+    private int customerId;
 }

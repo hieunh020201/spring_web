@@ -1,4 +1,4 @@
-package com.r2s.springJPA.dto;
+package com.r2s.springJPA.dto.request;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.sql.Date;
 
 @Data
-public class CreateUserRequestDTO implements Serializable {
+public class CreateCustomerRequestDTO implements Serializable {
 
     private String name;
 
