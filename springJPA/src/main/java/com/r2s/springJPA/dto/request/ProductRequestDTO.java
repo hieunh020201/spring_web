@@ -5,11 +5,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class CreateProductRequestDTO implements Serializable {
+public class ProductRequestDTO implements Serializable {
     private String name;
 
     private int price;
-
-    private int categoryId;
-
 }

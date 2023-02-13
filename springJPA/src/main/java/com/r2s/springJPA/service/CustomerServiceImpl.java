@@ -40,6 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public CustomerResponseDto insertCustomer(CreateCustomerRequestDTO requestDTO) {
         Customer user = new Customer();
         user.setName(requestDTO.getName());
@@ -87,4 +88,6 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid"));
         return customerMapper.convertEntityResponseDto(customer);
     }
+
+
 }

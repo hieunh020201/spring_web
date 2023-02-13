@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 public interface CartService {
     public PageResponseDto getAllCarts(Pageable pageable);
 
-    public CartResponseDto insertCart(CartRequestDTO requestDTO);
-
     public CartResponseDto getCartByCartId(int cartId);
 
     public void deleteCartByCartId(int cartId);
+
+    CartResponseDto insertCartByCustomer(int customerId);
 }

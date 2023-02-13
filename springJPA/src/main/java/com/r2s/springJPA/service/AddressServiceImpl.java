@@ -2,12 +2,18 @@ package com.r2s.springJPA.service;
 
 import com.r2s.springJPA.dto.request.CreateAddressByCustomerRequestDTO;
 import com.r2s.springJPA.dto.request.CreateAddressRequestDto;
+import com.r2s.springJPA.dto.request.UpdateAddressByCustomerRequestDto;
 import com.r2s.springJPA.dto.request.UpdateAddressRequestDto;
-import com.r2s.springJPA.dto.response.AddressResponseDto;
-import com.r2s.springJPA.dto.response.PageResponseDto;
+import com.r2s.springJPA.dto.response.*;
 import com.r2s.springJPA.entity.Address;
+import com.r2s.springJPA.entity.Customer;
+import com.r2s.springJPA.entity.CustomerAddress;
+import com.r2s.springJPA.entity.CustomerAddressId;
 import com.r2s.springJPA.mapper.AddressMapper;
+import com.r2s.springJPA.mapper.CustomerAddressMapper;
+import com.r2s.springJPA.mapper.CustomerMapper;
 import com.r2s.springJPA.repository.AddressRepository;
+import com.r2s.springJPA.repository.CustomerAddressRepository;
 import com.r2s.springJPA.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,8 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AddressServiceImpl implements AddressService{
@@ -28,7 +34,16 @@ public class AddressServiceImpl implements AddressService{
     private CustomerRepository customerRepository;
 
     @Autowired
+    private CustomerAddressRepository customerAddressRepository;
+
+    @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private CustomerMapper customerMapper;
+
+    @Autowired
+    CustomerAddressMapper customerAddressMapper;
 
     @Override
     public PageResponseDto getAllAddresses(Pageable pageable) {
@@ -47,20 +62,10 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public AddressResponseDto insertAddress(CreateAddressRequestDto requestDto) {
-        if (!addressRepository.findByCustomer(customerRepository.findById(requestDto.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid")))
-                .isEmpty()) {
-            throw new IllegalArgumentException("Customer had address");
-        }
         Address address = new Address();
-        address.setName(requestDto.getName());
-        address.setPhone(requestDto.getPhone());
         address.setDistrict(requestDto.getDistrict());
         address.setProvince(requestDto.getProvince());
         address.setStreet(requestDto.getStreet());
-        address.setType(requestDto.isType());
-        address.setDefaultAddress(requestDto.isDefaultAddress());
-        address.setCustomer(customerRepository.findById(requestDto.getCustomerId()).get());
         address.setDeleted(false);
         return addressMapper.convertEntityResponseDto(addressRepository.save(address));
     }
@@ -70,13 +75,9 @@ public class AddressServiceImpl implements AddressService{
         Address address = addressRepository.findById(addressId).orElseThrow(() -> {
             throw new IllegalArgumentException("Address doesn't exist");
         });
-        address.setName(requestDto.getName());
-        address.setPhone(requestDto.getPhone());
         address.setDistrict(requestDto.getDistrict());
         address.setProvince(requestDto.getProvince());
         address.setStreet(requestDto.getStreet());
-        address.setType(requestDto.isType());
-        address.setDefaultAddress(requestDto.isDefaultAddress());
 
         return addressMapper.convertEntityResponseDto(addressRepository.save(address));
     }
@@ -102,54 +103,85 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     @Transactional
-    public AddressResponseDto insertAddressByCustomer(int customerId, CreateAddressByCustomerRequestDTO requestDTO) {
-            Address address = new Address();
-            address.setName(requestDTO.getName());
-            address.setPhone(requestDTO.getPhone());
-            address.setDistrict(requestDTO.getDistrict());
-            address.setProvince(requestDTO.getProvince());
-            address.setStreet(requestDTO.getStreet());
-            address.setType(requestDTO.isType());
-            address.setDefaultAddress(requestDTO.isDefaultAddress());
-            address.setCustomer(customerRepository.findById(customerId)
-                    .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid")));
-            address.setDeleted(false);
+    public CustomerAddressResponseDto insertAddressByCustomer(int customerId, CreateAddressByCustomerRequestDTO requestDTO) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid"));
 
-            return addressMapper.convertEntityResponseDto(addressRepository.save(address));
+        Address address = addressRepository.findById(requestDTO.getAddressId())
+                        .orElseThrow(() -> new IllegalArgumentException("AddressId is invalid"));
+
+        CustomerAddressResponseDto customerAddressResponseDto = new CustomerAddressResponseDto();
+
+        if (customerAddressRepository.findById(new CustomerAddressId(customer, address))
+                .isPresent()) {
+            new IllegalArgumentException("Customer already has this address");
+        } else {
+            CustomerAddress customerAddress = new CustomerAddress();
+            customerAddress.setName(requestDTO.getName());
+            customerAddress.setPhone(requestDTO.getPhone());
+            customerAddress.setType(requestDTO.isType());
+            customerAddress.setDefaultAddress(requestDTO.isDefaultAddress());
+            customerAddress.setCustomerAddressId(new CustomerAddressId(customer, address));
+            customerAddress.setDeleted(false);
+            CustomerAddress customerAddressSaved = customerAddressRepository.save(customerAddress);
+
+            customerAddressResponseDto = customerAddressMapper.convertEntityResponseDto(customerAddressSaved);
+            AddressResponseDto addressResponseDto = addressMapper.convertEntityResponseDto(customerAddressSaved.getCustomerAddressId().getAddress());
+            customerAddressResponseDto.setAddress(addressResponseDto);
+
+        };
+
+        return customerAddressResponseDto;
     }
 
     @Override
-    public AddressResponseDto getAddressByCustomer(int customerId) {
-        Optional<Address> address = addressRepository.findByCustomer(customerRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid")));
+    public AddressByCustomerResponseDto getListAddressesByCustomer(int customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid"));
+        customer.getCustomerAddresses();
 
-        return addressMapper.convertEntityResponseDto(address.get());
+        AddressByCustomerResponseDto addressByCustomerResponseDto = new AddressByCustomerResponseDto();
+        addressByCustomerResponseDto = customerMapper.convertEntityResponseDtoV2(customer);
+
+        List<CustomerAddressResponseDto> customerAddressResponseDtos = customerAddressMapper.convertEntitiesResponseDtos(customer.getCustomerAddresses());
+
+        addressByCustomerResponseDto.setAddresses(customerAddressResponseDtos);
+
+        return addressByCustomerResponseDto;
     }
 
     @Override
-    public AddressResponseDto updateAddressByCustomer(int customerId, UpdateAddressRequestDto requestDto) {
-        Address address = addressRepository.findByCustomer(customerRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid")))
-                .orElseThrow(() -> new IllegalArgumentException("Address doesn't exist"));
+    @Transactional
+    public CustomerAddressResponseDto updateAddressByCustomer(int customerId, int addressId, UpdateAddressByCustomerRequestDto requestDto) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid"));
 
-        address.setName(requestDto.getName());
-        address.setPhone(requestDto.getPhone());
-        address.setProvince(requestDto.getProvince());
-        address.setDistrict(requestDto.getDistrict());
-        address.setStreet(requestDto.getStreet());
-        address.setType(requestDto.isType());
-        address.setDefaultAddress(requestDto.isDefaultAddress());
-        return addressMapper.convertEntityResponseDto(addressRepository.save(address));
+        CustomerAddress customerAddress = customer.getCustomerAddresses().stream().filter(x -> addressId == x.getCustomerAddressId().getAddress().getId())
+                .findAny().orElseThrow(() -> new IllegalArgumentException("AddressId is invalid"));
+
+        customerAddress.setName(requestDto.getName());
+        customerAddress.setPhone(requestDto.getPhone());
+        customerAddress.setType(requestDto.isType());
+        customerAddress.setDefaultAddress(requestDto.isDefaultAddress());
+
+        CustomerAddress customerAddressSaved = customerAddressRepository.save(customerAddress);
+
+
+        CustomerAddressResponseDto customerAddressResponseDto = customerAddressMapper.convertEntityResponseDto(customerAddressSaved);
+        AddressResponseDto addressResponseDto = addressMapper.convertEntityResponseDto(customerAddressSaved.getCustomerAddressId().getAddress());
+        customerAddressResponseDto.setAddress(addressResponseDto);
+
+        return customerAddressResponseDto;
     }
 
     @Override
     public void deleteAddressByCustomer(int customerId) {
-        Address address = addressRepository.findByCustomer(customerRepository.findById(customerId)
-                        .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid")))
-                .orElseThrow(() -> new IllegalArgumentException("Address doesn't exist"));
+//        Address address = addressRepository.findByCustomer(customerRepository.findById(customerId)
+//                        .orElseThrow(() -> new IllegalArgumentException("CustomerId is invalid")))
+//                .orElseThrow(() -> new IllegalArgumentException("Address doesn't exist"));
 
-        address.setDeleted(true);
-        addressRepository.save(address);
+//        address.setDeleted(true);
+//        addressRepository.save(address);
     }
 
 
