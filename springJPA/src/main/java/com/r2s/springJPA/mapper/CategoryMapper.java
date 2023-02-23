@@ -1,9 +1,7 @@
 package com.r2s.springJPA.mapper;
 
 import com.r2s.springJPA.dto.response.CategoryResponseDto;
-import com.r2s.springJPA.dto.response.CustomerResponseDto;
 import com.r2s.springJPA.entity.Category;
-import com.r2s.springJPA.entity.Customer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 

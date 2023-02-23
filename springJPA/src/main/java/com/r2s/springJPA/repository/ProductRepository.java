@@ -12,4 +12,6 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Integer> {
     Optional<Page<Product>> findAll(Pageable pageable);
+
+    Optional<Page<Product>> findAllByCategory(Category category, Pageable pageable);
 }

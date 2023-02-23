@@ -3,12 +3,16 @@ package com.r2s.springJPA.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Setter
 @Getter
-@Entity(name = "CART")
+@Entity
+@Table(name = "CART")
+@Where(clause = "IS_DELETED = false")
 public class Cart {
 
     @Id
@@ -17,8 +21,14 @@ public class Cart {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
-    private Customer customer;
+    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+    private User user;
+
+    @JoinColumn(name = "STATUS")
+    private String status;
+
+    @OneToMany(mappedBy = "cartLineItemId.cart")
+    private List<CartLineItem> cartLineItems;
 
     @Column(name = "IS_DELETED")
     private boolean isDeleted;

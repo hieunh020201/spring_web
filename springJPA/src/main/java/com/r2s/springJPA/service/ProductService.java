@@ -14,6 +14,8 @@ public interface ProductService {
 
     void deleteProduct(int productId);
 
+    PageResponseDto getAllProductsByCategory(int categoryId, Pageable pageable);
+
     ProductResponseDto insertProductByCategory(int categoryId, ProductRequestDTO requestDTO);
 
     ProductResponseDto updateProductByCategory(int categoryId, int productId, ProductRequestDTO requestDTO);

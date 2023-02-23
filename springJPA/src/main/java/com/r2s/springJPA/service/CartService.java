@@ -7,11 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 public interface CartService {
-    public PageResponseDto getAllCarts(Pageable pageable);
+    PageResponseDto getAllCartsByUser(int userId, Pageable pageable);
 
-    public CartResponseDto getCartByCartId(int cartId);
+    CartResponseDto getCartByUser(int userId, int cartId);
 
-    public void deleteCartByCartId(int cartId);
+    void deleteCartByUser(int userId, int cartId);
 
-    CartResponseDto insertCartByCustomer(int customerId);
+    CartResponseDto insertCartByUser(int userId);
+
+    CartResponseDto updateCartByUser(int userId, int cartId);
 }
