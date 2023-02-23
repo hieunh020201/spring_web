@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,18 +19,21 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @GetMapping("/get-all")
     public ResponseEntity<?> getALlProducts(Pageable pageable) {
         PageResponseDto pageResponseDto = productService.getAllProducts(pageable);
         return new ResponseEntity<>(pageResponseDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{product-id}")
     public ResponseEntity<?> getProductByProductId(@PathVariable("product-id") int productId) {
         ProductResponseDto responseDto = productService.getProductByProductId(productId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{product-id}")
     public ResponseEntity<?> deletedProductByProductId(@PathVariable("product-id") int productId) {
         productService.deleteProduct(productId);

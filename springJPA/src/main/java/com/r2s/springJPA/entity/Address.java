@@ -1,13 +1,11 @@
 package com.r2s.springJPA.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -32,6 +30,6 @@ public class Address {
     @Column(name = "IS_DELETED")
     private boolean isDeleted;
 
-    @OneToMany(mappedBy = "customerAddressId.address")
-    private List<CustomerAddress> customerAddresses;
+    @OneToMany(mappedBy = "userAddressId.address")
+    private List<UserAddress> userAddresses;
 }
